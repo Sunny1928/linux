@@ -3,8 +3,9 @@
 
 ssize_t proc_read(struct file *file, char __user *usr_buf, size_t count, loff_t *pos);
 
-static struct proc_ops ops = {
-        .proc_read = proc_read,
+static struct file_operations ops = {
+        .owner = THIS_MODULE,
+        .read = proc_read,
 };
 
 
