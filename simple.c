@@ -1,49 +1,22 @@
-#define BUFFER_SIZE 128
-#define PROC_NAME "hello"
+#include <linux/init.h>
+#include <linux/kernel.h>
+#include <linux/module.h>
 
-ssize_t proc_read(struct file *file, char __user *usr_buf, size_t count, loff_t *pos);
-
-static struct file_operations ops = {
-        .owner = THIS_MODULE,
-        .read = proc_read,
-};
-
-
-int proc_init(void)
+int sample_init(void)
 {
-        proc_create(PROC_NAME, 0666, NULL, &ops);
+	printk(KERN_INFO "Loading Kernel Module A1095550\n");
 
-        return 0;
+	return 0;
 }
 
-void proc_exit(void)
+void sample_exit(void)
 {
-        remove_proc_entry(PROC_NAME, NULL);
+	printk(KERN_INFO "Removing Kernel Module A1095550\n");
 }
 
-ssize_t proc_read(struct file *file, char __user *usr_buf, size_t count, loff_t *pos)
-{
-        int rv=0;
-        char buffer[BUFFER_SIZE];
-        static int completed = 0;
-
-        if(completed){
-                completed=0;
-                return 0;
-        }
-
-        completed = 1;
-
-        rv = sprintf(buffer, "Hello World A1095550\n");
-
-        copy_to_user(usr_buf, buffer, rv);
-
-        return rv;
-}
-module_init(proc_init);
-module_exit(proc_exit);
+module_init(sample_init);
+module_exit(sample_exit);
 
 MODULE_LICENSE("GPL");
-MODULE_DESCRIPTION("Hello Module");
+MODULE_DESCRIPTION("Simple Module");
 MODULE_AUTHOR("SGG");
-                                  
